@@ -42,10 +42,10 @@ class Psr7ResponseTest extends TestCase
         $stream->write($body);
 
         $psr7Response = new Response($stream, $status, $headers);
-        $this->assertInstanceOf(ResponseInterface::class, $psr7Response);
+        $this->assertInstanceOf('Psr\Http\Message\ResponseInterface', $psr7Response);
 
         $zendResponse = Psr7Response::toZend($psr7Response);
-        $this->assertInstanceOf(ZendResponse::class, $zendResponse);
+        $this->assertInstanceOf('Zend\Http\Response', $zendResponse);
         $this->assertEquals($body, (string)$zendResponse->getBody());
         $this->assertEquals($status, $zendResponse->getStatusCode());
 
@@ -66,10 +66,10 @@ class Psr7ResponseTest extends TestCase
         $stream->write($body);
 
         $psr7Response = new Response($stream, $status, $headers);
-        $this->assertInstanceOf(ResponseInterface::class, $psr7Response);
+        $this->assertInstanceOf('Psr\Http\Message\ResponseInterface', $psr7Response);
 
         $zendResponse = Psr7Response::toZend($psr7Response);
-        $this->assertInstanceOf(ZendResponse::class, $zendResponse);
+        $this->assertInstanceOf('Zend\Http\Response', $zendResponse);
         $this->assertEquals($body, (string)$zendResponse->getBody());
         $this->assertEquals($status, $zendResponse->getStatusCode());
 
@@ -90,10 +90,10 @@ class Psr7ResponseTest extends TestCase
         $stream->write($body);
 
         $psr7Response = new Response($stream, $status, $headers);
-        $this->assertInstanceOf(ResponseInterface::class, $psr7Response);
+        $this->assertInstanceOf('Psr\Http\Message\ResponseInterface', $psr7Response);
 
         $zendResponse = Psr7Response::toZend($psr7Response);
-        $this->assertInstanceOf(ZendResponse::class, $zendResponse);
+        $this->assertInstanceOf('Zend\Http\Response', $zendResponse);
         $this->assertEquals($body, (string)$zendResponse->getBody());
         $this->assertEquals($status, $zendResponse->getStatusCode());
 
@@ -121,9 +121,9 @@ class Psr7ResponseTest extends TestCase
     public function testResponseFromZend($response)
     {
         $zendResponse = ZendResponse::fromString($response);
-        $this->assertInstanceOf(ZendResponse::class, $zendResponse);
+        $this->assertInstanceOf('Zend\Http\Response', $zendResponse);
         $psr7Response = Psr7Response::fromZend($zendResponse);
-        $this->assertInstanceOf(ResponseInterface::class, $psr7Response);
+        $this->assertInstanceOf('Psr\Http\Message\ResponseInterface', $psr7Response);
         $this->assertEquals((string)$psr7Response->getBody(), $zendResponse->getBody());
         $this->assertEquals($psr7Response->getStatusCode(), $zendResponse->getStatusCode());
 
@@ -140,8 +140,8 @@ class Psr7ResponseTest extends TestCase
      */
     public function testPrivateConstruct()
     {
-        $this->expectException(Error::class);
-        $this->expectExceptionMessage(sprintf('Call to private %s::__construct', Psr7Response::class));
+        $this->expectException('Error');
+        $this->expectExceptionMessage(sprintf('Call to private %s::__construct', 'RstGroup\Psr7Bridge\Psr7Response'));
         new Psr7Response();
     }
 }
