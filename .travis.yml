@@ -20,49 +20,28 @@ matrix:
     - php: 5.3
       dist: precise
       env:
-        - DEPS=locked
-        - LEGACY_DEPS="phpunit/phpunit"
-    - php: 5.3
-      dist: precise
-      env:
         - DEPS=latest
     - php: 5.4
       env:
         - DEPS=lowest
     - php: 5.4
       env:
-        - DEPS=locked
-        - LEGACY_DEPS="phpunit/phpunit"
-    - php: 5.4
-      env:
         - DEPS=latest
     - php: 5.5
       env:
         - DEPS=lowest
-    - php: 5.5
-      env:
-        - DEPS=locked
-        - LEGACY_DEPS="phpunit/phpunit"
     - php: 5.5
       env:
         - DEPS=latest
     - php: 5.6
       env:
         - DEPS=lowest
-    - php: 5.6
-      env:
-        - DEPS=locked
-        - LEGACY_DEPS="phpunit/phpunit"
     - php: 5.6
       env:
         - DEPS=latest
     - php: 7
       env:
         - DEPS=lowest
-    - php: 7
-      env:
-        - DEPS=locked
-        - LEGACY_DEPS="phpunit/phpunit"
     - php: 7
       env:
         - DEPS=latest
@@ -71,7 +50,6 @@ matrix:
         - DEPS=lowest
     - php: 7.1
       env:
-        - DEPS=locked
         - CS_CHECK=true
         - TEST_COVERAGE=true
     - php: 7.1
@@ -82,16 +60,12 @@ matrix:
         - DEPS=lowest
     - php: 7.2
       env:
-        - DEPS=locked
-    - php: 7.2
-      env:
         - DEPS=latest
 
 before_install:
   - if [[ $TEST_COVERAGE != 'true' ]]; then phpenv config-rm xdebug.ini || return 0 ; fi
 
 install:
-  - travis_retry composer install $COMPOSER_ARGS --ignore-platform-reqs
   - if [[ $LEGACY_DEPS != '' ]]; then travis_retry composer update $COMPOSER_ARGS --with-dependencies $LEGACY_DEPS ; fi
   - if [[ $DEPS == 'latest' ]]; then travis_retry composer update $COMPOSER_ARGS ; fi
   - if [[ $DEPS == 'lowest' ]]; then travis_retry composer update --prefer-lowest --prefer-stable $COMPOSER_ARGS ; fi

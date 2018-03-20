@@ -5,4 +5,4 @@
 /vendor/
 /zf-mkdoc-theme.tgz
 /zf-mkdoc-theme/
-/nbproject/private/
+composer.lock
