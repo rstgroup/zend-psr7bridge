@@ -501,7 +501,7 @@ class Psr7ServerRequestTest extends TestCase
     public function testFromZendConvertsCookies()
     {
         $request = new ZendRequest();
-        $zendCookieData = ['foo' => 'test', 'bar' => 'test 2'];
+        $zendCookieData = array('foo' => 'test', 'bar' => 'test 2');
         $request->getHeaders()->addHeader(new Cookie($zendCookieData));
 
         $psr7Request = Psr7ServerRequest::fromZend($request);
