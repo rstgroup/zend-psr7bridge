@@ -40,8 +40,6 @@ class Request extends BaseRequest
         array $uploadedFiles,
         array $serverParams
     ) {
-        $this->setAllowCustomMethods(true);
-
         $this->setMethod($method);
         // Remove the "http(s)://hostname" part from the URI
         $this->setRequestUri(preg_replace('#^[^/:]+://[^/]+#', '', (string) $uri));
