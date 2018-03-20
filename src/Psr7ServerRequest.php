@@ -42,7 +42,7 @@ final class Psr7ServerRequest
                 $psr7Request->getCookieParams(),
                 $queryParams ? $queryParams : array(),
                 array(),
-                [],
+                array(),
                 $serverParams ? $serverParams : array()
             );
         }
@@ -53,7 +53,7 @@ final class Psr7ServerRequest
             $psr7Request->getHeaders(),
             $cookieParams ? $cookieParams : array(),
             $queryParams ? $queryParams : array(),
-            $psr7Request->getParsedBody() ?: [],
+            $psr7Request->getParsedBody() ?: array(),
             self::convertUploadedFiles($psr7Request->getUploadedFiles()),
             $serverParams ? $serverParams : array()
         );
@@ -73,13 +73,13 @@ final class Psr7ServerRequest
         $body = new Stream('php://memory', 'wb+');
         $body->write($zendRequest->getContent());
 
-        $headers = empty($zendRequest->getHeaders()) ? [] : $zendRequest->getHeaders()->toArray();
-        $query   = empty($zendRequest->getQuery()) ? [] : $zendRequest->getQuery()->toArray();
-        $post    = empty($zendRequest->getPost()) ? [] : $zendRequest->getPost()->toArray();
-        $files   = empty($zendRequest->getFiles()) ? [] : $zendRequest->getFiles()->toArray();
+        $headers = empty($zendRequest->getHeaders()) ? array() : $zendRequest->getHeaders()->toArray();
+        $query   = empty($zendRequest->getQuery()) ? array() : $zendRequest->getQuery()->toArray();
+        $post    = empty($zendRequest->getPost()) ? array() : $zendRequest->getPost()->toArray();
+        $files   = empty($zendRequest->getFiles()) ? array() : $zendRequest->getFiles()->toArray();
 
         $request = new ServerRequest(
-            $zendRequest instanceof ZendPhpEnvironmentRequest ? iterator_to_array($zendRequest->getServer()) : [],
+            $zendRequest instanceof ZendPhpEnvironmentRequest ? iterator_to_array($zendRequest->getServer()) : array(),
             self::convertFilesToUploaded($files),
             $zendRequest->getUriString(),
             $zendRequest->getMethod(),
@@ -104,7 +104,7 @@ final class Psr7ServerRequest
      */
     private static function convertUploadedFiles(array $uploadedFiles)
     {
-        $files = [];
+        $files = array();
         foreach ($uploadedFiles as $name => $upload) {
             if (is_array($upload)) {
                 $files[$name] = self::convertUploadedFiles($upload);
@@ -114,13 +114,13 @@ final class Psr7ServerRequest
             $uploadError = $upload->getError();
             $isUploadError = $uploadError !== UPLOAD_ERR_OK;
 
-            $files[$name] = [
+            $files[$name] = array(
                 'name'     => $upload->getClientFilename(),
                 'type'     => $upload->getClientMediaType(),
                 'size'     => $upload->getSize(),
                 'tmp_name' => ! $isUploadError ? $upload->getStream()->getMetadata('uri') : '',
                 'error'    => $uploadError,
-            ];
+            );
         }
         return $files;
     }
@@ -133,7 +133,7 @@ final class Psr7ServerRequest
      */
     private static function convertFilesToUploaded(array $files)
     {
-        $uploadedFiles = [];
+        $uploadedFiles = array();
         foreach ($files as $name => $value) {
             if (is_array($value)) {
                 $uploadedFiles[$name] = self::convertFilesToUploaded($value);

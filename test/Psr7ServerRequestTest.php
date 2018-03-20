@@ -24,12 +24,12 @@ class Psr7ServerRequestTest extends TestCase
 {
     public function testToZendWithShallowOmitsBody()
     {
-        $server = [
+        $server = array(
             'SCRIPT_NAME'     => __FILE__,
             'SCRIPT_FILENAME' => __FILE__,
-        ];
+        );
 
-        $uploadedFiles = [
+        $uploadedFiles = array(
             'foo' => new UploadedFile(
                 __FILE__,
                 100,
@@ -37,7 +37,7 @@ class Psr7ServerRequestTest extends TestCase
                 'foo.txt',
                 'text/plain'
             ),
-        ];
+        );
 
         $uri = 'https://example.com/foo/bar?baz=bat';
         $requestUri = '/foo/bar?baz=bat';
@@ -45,19 +45,19 @@ class Psr7ServerRequestTest extends TestCase
 
         $body = fopen(__FILE__, 'r');
 
-        $headers = [
-            'Host'         => [ 'example.com' ],
-            'X-Foo'        => [ 'bar' ],
-            'Content-Type' => [ 'multipart/form-data' ],
-        ];
+        $headers = array(
+            'Host'         => array( 'example.com' ),
+            'X-Foo'        => array( 'bar' ),
+            'Content-Type' => array( 'multipart/form-data' ),
+        );
 
-        $cookies = [
+        $cookies = array(
             'PHPSESSID' => uniqid(),
-        ];
+        );
 
-        $bodyParams = [
+        $bodyParams = array(
             'foo' => 'bar',
-        ];
+        );
 
         $psr7Request = (new ServerRequest(
             $server,
@@ -113,12 +113,12 @@ class Psr7ServerRequestTest extends TestCase
 
     public function testCanCastFullRequestToZend()
     {
-        $server = [
+        $server = array(
             'SCRIPT_NAME'     => __FILE__,
             'SCRIPT_FILENAME' => __FILE__,
-        ];
+        );
 
-        $uploadedFiles = [
+        $uploadedFiles = array(
             'foo' => new UploadedFile(
                 __FILE__,
                 100,
@@ -126,7 +126,7 @@ class Psr7ServerRequestTest extends TestCase
                 'foo.txt',
                 'text/plain'
             ),
-        ];
+        );
 
         $uri = 'https://example.com/foo/bar?baz=bat';
         $requestUri = preg_replace('#^[^/:]+://[^/]+#', '', $uri);
@@ -135,19 +135,19 @@ class Psr7ServerRequestTest extends TestCase
 
         $body = fopen(__FILE__, 'r');
 
-        $headers = [
-            'Host'         => [ 'example.com' ],
-            'X-Foo'        => [ 'bar' ],
-            'Content-Type' => [ 'multipart/form-data' ],
-        ];
+        $headers = array(
+            'Host'         => array( 'example.com' ),
+            'X-Foo'        => array( 'bar' ),
+            'Content-Type' => array( 'multipart/form-data' ),
+        );
 
-        $cookies = [
+        $cookies = array(
             'PHPSESSID' => uniqid(),
-        ];
+        );
 
-        $bodyParams = [
+        $bodyParams = array(
             'foo' => 'bar',
-        ];
+        );
 
         $psr7Request = (new ServerRequest(
             $server,
@@ -211,12 +211,12 @@ class Psr7ServerRequestTest extends TestCase
 
     public function testCanCastErroneousUploadToZendRequest()
     {
-        $server = [
+        $server = array(
             'SCRIPT_NAME'     => __FILE__,
             'SCRIPT_FILENAME' => __FILE__,
-        ];
+        );
 
-        $uploadedFiles = [
+        $uploadedFiles = array(
             'foo' => new UploadedFile(
                 __FILE__,
                 0,
@@ -224,7 +224,7 @@ class Psr7ServerRequestTest extends TestCase
                 '',
                 ''
             ),
-        ];
+        );
 
         $uri = 'https://example.com/foo/bar?baz=bat';
         $requestUri = preg_replace('#^[^/:]+://[^/]+#', '', $uri);
@@ -233,19 +233,19 @@ class Psr7ServerRequestTest extends TestCase
 
         $body = fopen(__FILE__, 'r');
 
-        $headers = [
-            'Host'         => [ 'example.com' ],
-            'X-Foo'        => [ 'bar' ],
-            'Content-Type' => [ 'multipart/form-data' ],
-        ];
+        $headers = array(
+            'Host'         => array( 'example.com' ),
+            'X-Foo'        => array( 'bar' ),
+            'Content-Type' => array( 'multipart/form-data' ),
+        );
 
-        $cookies = [
+        $cookies = array(
             'PHPSESSID' => uniqid(),
-        ];
+        );
 
-        $bodyParams = [
+        $bodyParams = array(
             'foo' => 'bar',
-        ];
+        );
 
         $psr7Request = (new ServerRequest(
             $server,
@@ -313,8 +313,8 @@ class Psr7ServerRequestTest extends TestCase
 
     public function testNestedFileParametersArePassedCorrectlyToZendRequest()
     {
-        $uploadedFiles = [
-            'foo-bar' => [
+        $uploadedFiles = array(
+            'foo-bar' => array(
                 new UploadedFile(
                     __FILE__,
                     0,
@@ -329,10 +329,10 @@ class Psr7ServerRequestTest extends TestCase
                     basename(__FILE__),
                     'plain/text'
                 ),
-            ]
-        ];
+            )
+        );
 
-        $psr7Request = new ServerRequest([], $uploadedFiles);
+        $psr7Request = new ServerRequest(array(), $uploadedFiles);
 
         $zendRequest = Psr7ServerRequest::toZend($psr7Request);
 
@@ -377,72 +377,72 @@ class Psr7ServerRequestTest extends TestCase
 
     public function getResponseData()
     {
-        return [
-            [
+        return array(
+            array(
                 'http://framework.zend.com/', // uri
                 'GET', // http method
-                [ 'Content-Type' => 'text/html' ], // headers
+                array( 'Content-Type' => 'text/html' ), // headers
                 '<html></html>', // body
-                [ 'foo' => 'bar' ], // query params
-                [], // post
-                [], // files
-            ],
-            [
+                array( 'foo' => 'bar' ), // query params
+                array(), // post
+                array(), // files
+            ),
+            array(
                 'http://framework.zend.com/', // uri
                 'POST', // http method
-                [
+                array(
                     'Content-Type' => 'application/x-www-form-urlencoded',
                     'Cookie' => sprintf("PHPSESSID=%s;foo=bar", uniqid())
-                ], // headers
+                ), // headers
                 '', // body
-                [ 'foo' => 'bar' ], // query params
-                [ 'baz' => 'bar' ], // post
-                [], // files
-            ],
-            [
+                array( 'foo' => 'bar' ), // query params
+                array( 'baz' => 'bar' ), // post
+                array(), // files
+            ),
+            array(
                 'http://framework.zend.com/', // uri
                 'POST', // http method
-                [ 'Content-Type' => 'multipart/form-data' ], // headers
+                array( 'Content-Type' => 'multipart/form-data' ), // headers
                 file_get_contents(__FILE__), // body
-                [ 'foo' => 'bar' ], // query params
-                [], // post
-                [
-                    'file' => [
-                        'test1' => [
+                array( 'foo' => 'bar' ), // query params
+                array(), // post
+                array(
+                    'file' => array(
+                        'test1' => array(
                             'name' => 'test1.txt',
                             'type' => 'text/plain',
                             'tmp_name' => __FILE__,
                             'error' => 0,
                             'size' => 1,
-                        ],
-                        'test2' => [
+                        ),
+                        'test2' => array(
                             'name' => 'test2.txt',
                             'type' => 'text/plain',
                             'tmp_name' => __FILE__,
                             'error' => 0,
                             'size' => 1,
-                        ]
-                    ]
-                ], // files
-            ],
-            [
+                        )
+                    )
+                ), // files
+            ),
+            array(
                 'http://framework.zend.com/', // uri
                 'POST', // http method
-                [ 'Content-Type' => 'multipart/form-data' ], // headers
+                array( 'Content-Type' => 'multipart/form-data' ), // headers
                 file_get_contents(__FILE__), // body
-                [ 'foo' => 'bar' ], // query params
-                [], // post
-                [
-                    'file' => [
+                array( 'foo' => 'bar' ), // query params
+                array(), // post
+                array(
+                    'file' => array(
                         'name' => 'test2.txt',
                         'type' => 'text/plain',
                         'tmp_name' => __FILE__,
                         'error' => 0,
                         'size' => 1,
-                    ]
-                ], // files
-            ]
-        ];
+                    )
+                ), // files
+            )
+        );
     }
 
     /**
@@ -533,7 +533,7 @@ class Psr7ServerRequestTest extends TestCase
      */
     public function testBaseUrlFromGlobal()
     {
-        $server = [
+        $server = array(
             'HTTP_HOST' => 'host.com',
             'SERVER_PORT' => '80',
             'REQUEST_URI' => '/test/path/here?foo=bar',
@@ -541,7 +541,7 @@ class Psr7ServerRequestTest extends TestCase
             'PHP_SELF' => '/test/path/here/index.php',
             'SCRIPT_NAME' => '/test/path/here/index.php',
             'QUERY_STRING' => 'foo=bar'
-        ];
+        );
 
         $psr7 = new ServerRequest($server);
         $converted = Psr7ServerRequest::toZend($psr7);

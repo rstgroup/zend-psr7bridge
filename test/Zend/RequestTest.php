@@ -17,7 +17,7 @@ class RequestTest extends TestCase
     {
         $method  = 'GET';
         $path    = '/foo';
-        $request = new Request($method, $path, [], [], [], [], [], []);
+        $request = new Request($method, $path, array(), array(), array(), array(), array(), array());
 
         $this->assertInstanceOf(Request::class, $request);
         $this->assertSame($method, $request->getMethod());
