@@ -14,7 +14,6 @@ use PHPUnit\Framework\TestCase as TestCase;
 use Psr\Http\Message\UploadedFileInterface;
 use RstGroup\Psr7Bridge\Psr7ServerRequest;
 use RstGroup\Psr7Bridge\Zend\Request as BridgeRequest;
-use Zend\Diactoros\ServerRequestFactory;
 use Zend\Http\Header\Cookie;
 use Zend\Http\PhpEnvironment\Request;
 use Zend\Http\Request as ZendRequest;
@@ -59,16 +58,16 @@ class Psr7ServerRequestTest extends TestCase
             'foo' => 'bar',
         );
 
-        $psr7Request = (new ServerRequest(
+        $psr7Request = new ServerRequest(
             $server,
             $uploadedFiles,
             $uri,
             $method,
             $body,
             $headers
-        ))
-            ->withCookieParams($cookies)
-            ->withParsedBody($bodyParams);
+        );
+        $psr7Request = $psr7Request->withCookieParams($cookies)
+                ->withParsedBody($bodyParams);
 
         $zendRequest = Psr7ServerRequest::toZend($psr7Request, $shallow = true);
 
@@ -149,15 +148,15 @@ class Psr7ServerRequestTest extends TestCase
             'foo' => 'bar',
         );
 
-        $psr7Request = (new ServerRequest(
+        $psr7Request = new ServerRequest(
             $server,
             $uploadedFiles,
             $uri,
             $method,
             $body,
             $headers
-        ))
-            ->withCookieParams($cookies)
+        );
+        $psr7Request = $psr7Request->withCookieParams($cookies)
             ->withParsedBody($bodyParams);
 
         $zendRequest = Psr7ServerRequest::toZend($psr7Request);
@@ -247,15 +246,15 @@ class Psr7ServerRequestTest extends TestCase
             'foo' => 'bar',
         );
 
-        $psr7Request = (new ServerRequest(
+        $psr7Request = new ServerRequest(
             $server,
             $uploadedFiles,
             $uri,
             $method,
             $body,
             $headers
-        ))
-            ->withCookieParams($cookies)
+        );
+        $psr7Request = $psr7Request->withCookieParams($cookies)
             ->withParsedBody($bodyParams);
 
         $zendRequest = Psr7ServerRequest::toZend($psr7Request);
