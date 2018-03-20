@@ -516,7 +516,7 @@ class Psr7ServerRequestTest extends TestCase
     public function testServerParams()
     {
         $zendRequest = new Request();
-        $zendRequest->setServer(new Parameters(['REMOTE_ADDR' => '127.0.0.1']));
+        $zendRequest->setServer(new Parameters(array('REMOTE_ADDR' => '127.0.0.1')));
 
         $psr7Request = Psr7ServerRequest::fromZend($zendRequest);
 

@@ -73,10 +73,15 @@ final class Psr7ServerRequest
         $body = new Stream('php://memory', 'wb+');
         $body->write($zendRequest->getContent());
 
-        $headers = empty($zendRequest->getHeaders()) ? array() : $zendRequest->getHeaders()->toArray();
-        $query   = empty($zendRequest->getQuery()) ? array() : $zendRequest->getQuery()->toArray();
-        $post    = empty($zendRequest->getPost()) ? array() : $zendRequest->getPost()->toArray();
-        $files   = empty($zendRequest->getFiles()) ? array() : $zendRequest->getFiles()->toArray();
+        $headers = $zendRequest->getHeaders();
+        $query = $zendRequest->getQuery();
+        $post = $zendRequest->getPost();
+        $files = $zendRequest->getFiles();
+
+        $headers = empty($headers) ? array() : $headers->toArray();
+        $query   = empty($query) ? array() : $query->toArray();
+        $post    = empty($post) ? array() : $post->toArray();
+        $files   = empty($files) ? array() : $files->toArray();
 
         $request = new ServerRequest(
             $zendRequest instanceof ZendPhpEnvironmentRequest ? iterator_to_array($zendRequest->getServer()) : array(),
