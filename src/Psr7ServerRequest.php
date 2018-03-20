@@ -41,7 +41,7 @@ final class Psr7ServerRequest
                 $psr7Request->getHeaders(),
                 $psr7Request->getCookieParams(),
                 $queryParams ? $queryParams : array(),
-                [],
+                array(),
                 [],
                 $serverParams ? $serverParams : array()
             );
