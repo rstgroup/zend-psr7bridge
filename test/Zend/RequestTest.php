@@ -9,7 +9,6 @@ namespace RstGroupTest\Psr7Bridge\Zend;
 
 use PHPUnit\Framework\TestCase as TestCase;
 use RstGroup\Psr7Bridge\Zend\Request;
-use Zend\Uri\Http as Uri;
 
 class RequestTest extends TestCase
 {
@@ -19,10 +18,10 @@ class RequestTest extends TestCase
         $path    = '/foo';
         $request = new Request($method, $path, array(), array(), array(), array(), array(), array());
 
-        $this->assertInstanceOf(Request::class, $request);
+        $this->assertInstanceOf('RstGroup\Psr7Bridge\Zend\Request', $request);
         $this->assertSame($method, $request->getMethod());
         $this->assertSame($path, $request->getRequestUri());
-        $this->assertInstanceOf(Uri::class, $request->getUri());
+        $this->assertInstanceOf('Zend\Uri\Http', $request->getUri());
         $this->assertSame($path, $request->getUri()->getPath());
         $this->assertEmpty($request->getHeaders());
         $this->assertEmpty($request->getCookie());

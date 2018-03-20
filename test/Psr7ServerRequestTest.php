@@ -9,11 +9,9 @@ namespace RstGroupTest\Psr7Bridge;
 
 use Asika\Http\ServerRequest;
 use Asika\Http\UploadedFile;
-use Error;
 use PHPUnit\Framework\TestCase as TestCase;
 use Psr\Http\Message\UploadedFileInterface;
 use RstGroup\Psr7Bridge\Psr7ServerRequest;
-use RstGroup\Psr7Bridge\Zend\Request as BridgeRequest;
 use Zend\Http\Header\Cookie;
 use Zend\Http\PhpEnvironment\Request;
 use Zend\Http\Request as ZendRequest;
@@ -72,12 +70,12 @@ class Psr7ServerRequestTest extends TestCase
         $zendRequest = Psr7ServerRequest::toZend($psr7Request, $shallow = true);
 
         // This needs to be a ZF2 request
-        $this->assertInstanceOf(Request::class, $zendRequest);
-        $this->assertInstanceOf(ZendRequest::class, $zendRequest);
+        $this->assertInstanceOf('Zend\Http\PhpEnvironment\Request', $zendRequest);
+        $this->assertInstanceOf('Zend\Http\Request', $zendRequest);
 
         // But, more specifically, an instance where we do not use superglobals
         // to inject it
-        $this->assertInstanceOf(BridgeRequest::class, $zendRequest);
+        $this->assertInstanceOf('RstGroup\Psr7Bridge\Zend\Request', $zendRequest);
 
         // Assert shallow conditions
         // (content, files, and body parameters are not injected)
@@ -100,7 +98,7 @@ class Psr7ServerRequestTest extends TestCase
 
         $this->assertTrue($zf2Headers->has('Cookie'));
         $cookie = $zf2Headers->get('Cookie');
-        $this->assertInstanceOf(Cookie::class, $cookie);
+        $this->assertInstanceOf('Zend\Http\Header\Cookie', $cookie);
         $this->assertTrue(isset($cookie['PHPSESSID']));
         $this->assertEquals($cookies['PHPSESSID'], $cookie['PHPSESSID']);
 
@@ -162,12 +160,12 @@ class Psr7ServerRequestTest extends TestCase
         $zendRequest = Psr7ServerRequest::toZend($psr7Request);
 
         // This needs to be a ZF2 request
-        $this->assertInstanceOf(Request::class, $zendRequest);
-        $this->assertInstanceOf(ZendRequest::class, $zendRequest);
+        $this->assertInstanceOf('Zend\Http\PhpEnvironment\Request', $zendRequest);
+        $this->assertInstanceOf('Zend\Http\Request', $zendRequest);
 
         // But, more specifically, an instance where we do not use superglobals
         // to inject it
-        $this->assertInstanceOf(BridgeRequest::class, $zendRequest);
+        $this->assertInstanceOf('RstGroup\Psr7Bridge\Zend\Request', $zendRequest);
 
         $this->assertEquals($requestUri, $zendRequest->getRequestUri());
         $this->assertEquals($uri, $zendRequest->getUri()->toString());
@@ -183,7 +181,7 @@ class Psr7ServerRequestTest extends TestCase
 
         $this->assertTrue($zf2Headers->has('Cookie'));
         $cookie = $zf2Headers->get('Cookie');
-        $this->assertInstanceOf(Cookie::class, $cookie);
+        $this->assertInstanceOf('Zend\Http\Header\Cookie', $cookie);
         $this->assertTrue(isset($cookie['PHPSESSID']));
         $this->assertEquals($cookies['PHPSESSID'], $cookie['PHPSESSID']);
 
@@ -260,12 +258,12 @@ class Psr7ServerRequestTest extends TestCase
         $zendRequest = Psr7ServerRequest::toZend($psr7Request);
 
         // This needs to be a ZF2 request
-        $this->assertInstanceOf(Request::class, $zendRequest);
-        $this->assertInstanceOf(ZendRequest::class, $zendRequest);
+        $this->assertInstanceOf('Zend\Http\PhpEnvironment\Request', $zendRequest);
+        $this->assertInstanceOf('Zend\Http\Request', $zendRequest);
 
         // But, more specifically, an instance where we do not use superglobals
         // to inject it
-        $this->assertInstanceOf(BridgeRequest::class, $zendRequest);
+        $this->assertInstanceOf('RstGroup\Psr7Bridge\Zend\Request', $zendRequest);
 
         $this->assertEquals($requestUri, $zendRequest->getRequestUri());
         $this->assertEquals($uri, $zendRequest->getUri()->toString());
@@ -281,7 +279,7 @@ class Psr7ServerRequestTest extends TestCase
 
         $this->assertTrue($zf2Headers->has('Cookie'));
         $cookie = $zf2Headers->get('Cookie');
-        $this->assertInstanceOf(Cookie::class, $cookie);
+        $this->assertInstanceOf('Zend\Http\Header\Cookie', $cookie);
         $this->assertTrue(isset($cookie['PHPSESSID']));
         $this->assertEquals($cookies['PHPSESSID'], $cookie['PHPSESSID']);
 
@@ -336,12 +334,12 @@ class Psr7ServerRequestTest extends TestCase
         $zendRequest = Psr7ServerRequest::toZend($psr7Request);
 
         // This needs to be a ZF request
-        $this->assertInstanceOf(Request::class, $zendRequest);
-        $this->assertInstanceOf(ZendRequest::class, $zendRequest);
+        $this->assertInstanceOf('Zend\Http\PhpEnvironment\Request', $zendRequest);
+        $this->assertInstanceOf('Zend\Http\Request', $zendRequest);
 
         // But, more specifically, an instance where we do not use superglobals
         // to inject it
-        $this->assertInstanceOf(BridgeRequest::class, $zendRequest);
+        $this->assertInstanceOf('RstGroup\Psr7Bridge\Zend\Request', $zendRequest);
 
         $test = $zendRequest->getFiles();
         $this->assertCount(1, $test);
@@ -459,7 +457,7 @@ class Psr7ServerRequestTest extends TestCase
         $zendRequest->getFiles()->fromArray($files);
 
         $psr7Request = Psr7ServerRequest::fromZend($zendRequest);
-        $this->assertInstanceOf(ServerRequest::class, $psr7Request);
+        $this->assertInstanceOf('Asika\Http\ServerRequest', $psr7Request);
         // URI
         $this->assertEquals($uri, (string) $psr7Request->getUri());
         // HTTP method
@@ -554,8 +552,8 @@ class Psr7ServerRequestTest extends TestCase
      */
     public function testPrivateConstruct()
     {
-        $this->expectException(Error::class);
-        $this->expectExceptionMessage(sprintf('Call to private %s::__construct', Psr7ServerRequest::class));
+        $this->expectException('Error');
+        $this->expectExceptionMessage(sprintf('Call to private %s::__construct', 'RstGroup\Psr7Bridge\Psr7ServerRequest'));
         new Psr7ServerRequest();
     }
 }
