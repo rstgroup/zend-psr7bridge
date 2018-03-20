@@ -7,11 +7,11 @@
  * @license   https://github.com/zendframework/zend-diactoros/blob/master/LICENSE.md New BSD License
  */
 
-namespace Zend\Psr7Bridge;
+namespace RstGroup\Psr7Bridge;
 
+use Asika\Http\Response;
+use Asika\Http\Stream\Stream;
 use Psr\Http\Message\ResponseInterface;
-use Zend\Diactoros\Response;
-use Zend\Diactoros\Stream;
 use Zend\Http\Header\GenericHeader;
 use Zend\Http\Headers;
 use Zend\Http\Response as ZendResponse;

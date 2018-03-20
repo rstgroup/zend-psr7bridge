@@ -5,19 +5,19 @@
  * @license   https://github.com/zendframework/zend-psr7bridge/blob/master/LICENSE.md New BSD License
  */
 
-namespace ZendTest\Psr7Bridge;
+namespace RstGroupTest\Psr7Bridge;
 
+use Asika\Http\ServerRequest;
+use Asika\Http\UploadedFile;
 use Error;
 use PHPUnit\Framework\TestCase as TestCase;
 use Psr\Http\Message\UploadedFileInterface;
-use Zend\Diactoros\ServerRequest;
+use RstGroup\Psr7Bridge\Psr7ServerRequest;
+use RstGroup\Psr7Bridge\Zend\Request as BridgeRequest;
 use Zend\Diactoros\ServerRequestFactory;
-use Zend\Diactoros\UploadedFile;
 use Zend\Http\Header\Cookie;
 use Zend\Http\PhpEnvironment\Request;
 use Zend\Http\Request as ZendRequest;
-use Zend\Psr7Bridge\Psr7ServerRequest;
-use Zend\Psr7Bridge\Zend\Request as BridgeRequest;
 use Zend\Stdlib\Parameters;
 
 class Psr7ServerRequestTest extends TestCase
@@ -375,14 +375,6 @@ class Psr7ServerRequestTest extends TestCase
         $this->assertEquals(UPLOAD_ERR_OK, $upload[1]['error']);
     }
 
-    public function testCustomHttpMethodsDoNotRaiseAnExceptionDuringConversionToZendRequest()
-    {
-        $psr7Request = new ServerRequest([], [], null, 'CUSTOM_METHOD');
-
-        $zendRequest = Psr7ServerRequest::toZend($psr7Request);
-        $this->assertSame('CUSTOM_METHOD', $zendRequest->getMethod());
-    }
-
     public function getResponseData()
     {
         return [
@@ -541,7 +533,7 @@ class Psr7ServerRequestTest extends TestCase
      */
     public function testBaseUrlFromGlobal()
     {
-        $_SERVER = [
+        $server = [
             'HTTP_HOST' => 'host.com',
             'SERVER_PORT' => '80',
             'REQUEST_URI' => '/test/path/here?foo=bar',
@@ -551,7 +543,7 @@ class Psr7ServerRequestTest extends TestCase
             'QUERY_STRING' => 'foo=bar'
         ];
 
-        $psr7 = ServerRequestFactory::fromGlobals();
+        $psr7 = new ServerRequest($server);
         $converted = Psr7ServerRequest::toZend($psr7);
         $zendRequest = new Request();
 

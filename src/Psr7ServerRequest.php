@@ -7,14 +7,15 @@
  * @license   https://github.com/zendframework/zend-diactoros/blob/master/LICENSE.md New BSD License
  */
 
-namespace Zend\Psr7Bridge;
+namespace RstGroup\Psr7Bridge;
 
+use Asika\Http\ServerRequest;
+use Asika\Http\Stream\Stream;
+use Asika\Http\UploadedFile;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\UploadedFileInterface;
 use Zend\Http\PhpEnvironment\Request as ZendPhpEnvironmentRequest;
 use Zend\Http\Request as ZendRequest;
-use Zend\Diactoros\ServerRequest;
-use Zend\Diactoros\Stream;
-use Zend\Diactoros\UploadedFile;
 
 final class Psr7ServerRequest
 {
@@ -29,16 +30,20 @@ final class Psr7ServerRequest
      */
     public static function toZend(ServerRequestInterface $psr7Request, $shallow = false)
     {
+        $queryParams = $psr7Request->getQueryParams();
+        $serverParams = $psr7Request->getServerParams();
+        $cookieParams = $psr7Request->getCookieParams();
+
         if ($shallow) {
             return new Zend\Request(
                 $psr7Request->getMethod(),
                 $psr7Request->getUri(),
                 $psr7Request->getHeaders(),
                 $psr7Request->getCookieParams(),
-                $psr7Request->getQueryParams(),
+                $queryParams ? $queryParams : array(),
                 [],
                 [],
-                $psr7Request->getServerParams()
+                $serverParams ? $serverParams : array()
             );
         }
 
@@ -46,11 +51,11 @@ final class Psr7ServerRequest
             $psr7Request->getMethod(),
             $psr7Request->getUri(),
             $psr7Request->getHeaders(),
-            $psr7Request->getCookieParams(),
-            $psr7Request->getQueryParams(),
+            $cookieParams ? $cookieParams : array(),
+            $queryParams ? $queryParams : array(),
             $psr7Request->getParsedBody() ?: [],
             self::convertUploadedFiles($psr7Request->getUploadedFiles()),
-            $psr7Request->getServerParams()
+            $serverParams ? $serverParams : array()
         );
         $zendRequest->setContent($psr7Request->getBody());
 
@@ -94,7 +99,7 @@ final class Psr7ServerRequest
     /**
      * Convert a PSR-7 uploaded files structure to a $_FILES structure
      *
-     * @param \Psr\Http\Message\UploadedFileInterface[]
+     * @param UploadedFileInterface[]
      * @return array
      */
     private static function convertUploadedFiles(array $uploadedFiles)

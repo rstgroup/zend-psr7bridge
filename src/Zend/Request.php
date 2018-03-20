@@ -7,9 +7,8 @@
  * @license   https://github.com/zendframework/zend-diactoros/blob/master/LICENSE.md New BSD License
  */
 
-namespace Zend\Psr7Bridge\Zend;
+namespace RstGroup\Psr7Bridge\Zend;
 
-use Psr\Http\Message\UriInterface;
 use Zend\Http\Header\Cookie;
 use Zend\Http\PhpEnvironment\Request as BaseRequest;
 use Zend\Stdlib\Parameters;

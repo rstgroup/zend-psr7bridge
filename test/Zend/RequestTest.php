@@ -5,10 +5,10 @@
  * @license   https://github.com/zendframework/zend-psr7bridge/blob/master/LICENSE.md New BSD License
  */
 
-namespace ZendTest\Psr7Bridge\Zend;
+namespace RstGroupTest\Psr7Bridge\Zend;
 
 use PHPUnit\Framework\TestCase as TestCase;
-use Zend\Psr7Bridge\Zend\Request;
+use RstGroup\Psr7Bridge\Zend\Request;
 use Zend\Uri\Http as Uri;
 
 class RequestTest extends TestCase

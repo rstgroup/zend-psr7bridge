@@ -5,15 +5,15 @@
  * @license   https://github.com/zendframework/zend-psr7bridge/blob/master/LICENSE.md New BSD License
  */
 
-namespace ZendTest\Psr7Bridge;
+namespace RstGroupTest\Psr7Bridge;
 
+use Asika\Http\Response;
+use Asika\Http\Stream\Stream;
 use Error;
 use PHPUnit\Framework\TestCase as TestCase;
 use Psr\Http\Message\ResponseInterface;
-use Zend\Diactoros\Response;
-use Zend\Diactoros\Stream;
+use RstGroup\Psr7Bridge\Psr7Response;
 use Zend\Http\Response as ZendResponse;
-use Zend\Psr7Bridge\Psr7Response;
 
 class Psr7ResponseTest extends TestCase
 {
