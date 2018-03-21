@@ -329,7 +329,7 @@ class Psr7ServerRequestTest extends TestCase
             )
         );
 
-        $psr7Request = new ServerRequest(array(), $uploadedFiles);
+        $psr7Request = new ServerRequest(array(), $uploadedFiles, null, 'POST');
 
         $zendRequest = Psr7ServerRequest::toZend($psr7Request);
 
