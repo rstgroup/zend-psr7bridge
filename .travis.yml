@@ -50,7 +50,6 @@ matrix:
         - DEPS=lowest
     - php: 7.1
       env:
-        - CS_CHECK=true
         - TEST_COVERAGE=true
     - php: 7.1
       env:
