@@ -540,7 +540,7 @@ class Psr7ServerRequestTest extends TestCase
             'QUERY_STRING' => 'foo=bar'
         );
 
-        $psr7 = new ServerRequest($server);
+        $psr7 = new ServerRequest($server, array(), null, 'GET');
         $converted = Psr7ServerRequest::toZend($psr7);
         $zendRequest = new Request();
 
