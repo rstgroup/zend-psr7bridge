@@ -9,9 +9,7 @@ namespace RstGroupTest\Psr7Bridge;
 
 use Asika\Http\Response;
 use Asika\Http\Stream\Stream;
-use Error;
 use PHPUnit\Framework\TestCase as TestCase;
-use Psr\Http\Message\ResponseInterface;
 use RstGroup\Psr7Bridge\Psr7Response;
 use Zend\Http\Response as ZendResponse;
 
@@ -140,8 +138,8 @@ class Psr7ResponseTest extends TestCase
      */
     public function testPrivateConstruct()
     {
-        $this->expectException('Error');
-        $this->expectExceptionMessage(sprintf('Call to private %s::__construct', 'RstGroup\Psr7Bridge\Psr7Response'));
+        $this->setExpectedException('Error', sprintf('Call to private %s::__construct', 'RstGroup\Psr7Bridge\Psr7Response'));
+
         new Psr7Response();
     }
 }

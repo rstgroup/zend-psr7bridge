@@ -552,8 +552,8 @@ class Psr7ServerRequestTest extends TestCase
      */
     public function testPrivateConstruct()
     {
-        $this->expectException('Error');
-        $this->expectExceptionMessage(sprintf('Call to private %s::__construct', 'RstGroup\Psr7Bridge\Psr7ServerRequest'));
+        $this->setExpectedException('Error', sprintf('Call to private %s::__construct', 'RstGroup\Psr7Bridge\Psr7ServerRequest'));
+
         new Psr7ServerRequest();
     }
 }
