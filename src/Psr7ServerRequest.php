@@ -36,7 +36,7 @@ final class Psr7ServerRequest
 
         if ($shallow) {
             return new Zend\Request(
-                ,
+                $psr7Request->getMethod(),
                 $psr7Request->getUri(),
                 $psr7Request->getHeaders(),
                 $psr7Request->getCookieParams(),
