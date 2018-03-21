@@ -5,31 +5,28 @@
  * @license   https://github.com/zendframework/zend-psr7bridge/blob/master/LICENSE.md New BSD License
  */
 
-namespace ZendTest\Psr7Bridge;
+namespace RstGroupTest\Psr7Bridge;
 
-use Error;
+use Asika\Http\ServerRequest;
+use Asika\Http\UploadedFile;
 use PHPUnit\Framework\TestCase as TestCase;
 use Psr\Http\Message\UploadedFileInterface;
-use Zend\Diactoros\ServerRequest;
-use Zend\Diactoros\ServerRequestFactory;
-use Zend\Diactoros\UploadedFile;
+use RstGroup\Psr7Bridge\Psr7ServerRequest;
 use Zend\Http\Header\Cookie;
 use Zend\Http\PhpEnvironment\Request;
 use Zend\Http\Request as ZendRequest;
-use Zend\Psr7Bridge\Psr7ServerRequest;
-use Zend\Psr7Bridge\Zend\Request as BridgeRequest;
 use Zend\Stdlib\Parameters;
 
 class Psr7ServerRequestTest extends TestCase
 {
     public function testToZendWithShallowOmitsBody()
     {
-        $server = [
+        $server = array(
             'SCRIPT_NAME'     => __FILE__,
             'SCRIPT_FILENAME' => __FILE__,
-        ];
+        );
 
-        $uploadedFiles = [
+        $uploadedFiles = array(
             'foo' => new UploadedFile(
                 __FILE__,
                 100,
@@ -37,7 +34,7 @@ class Psr7ServerRequestTest extends TestCase
                 'foo.txt',
                 'text/plain'
             ),
-        ];
+        );
 
         $uri = 'https://example.com/foo/bar?baz=bat';
         $requestUri = '/foo/bar?baz=bat';
@@ -45,40 +42,40 @@ class Psr7ServerRequestTest extends TestCase
 
         $body = fopen(__FILE__, 'r');
 
-        $headers = [
-            'Host'         => [ 'example.com' ],
-            'X-Foo'        => [ 'bar' ],
-            'Content-Type' => [ 'multipart/form-data' ],
-        ];
+        $headers = array(
+            'Host'         => array( 'example.com' ),
+            'X-Foo'        => array( 'bar' ),
+            'Content-Type' => array( 'multipart/form-data' ),
+        );
 
-        $cookies = [
+        $cookies = array(
             'PHPSESSID' => uniqid(),
-        ];
+        );
 
-        $bodyParams = [
+        $bodyParams = array(
             'foo' => 'bar',
-        ];
+        );
 
-        $psr7Request = (new ServerRequest(
+        $psr7Request = new ServerRequest(
             $server,
             $uploadedFiles,
             $uri,
             $method,
             $body,
             $headers
-        ))
-            ->withCookieParams($cookies)
-            ->withParsedBody($bodyParams);
+        );
+        $psr7Request = $psr7Request->withCookieParams($cookies)
+                ->withParsedBody($bodyParams);
 
         $zendRequest = Psr7ServerRequest::toZend($psr7Request, $shallow = true);
 
         // This needs to be a ZF2 request
-        $this->assertInstanceOf(Request::class, $zendRequest);
-        $this->assertInstanceOf(ZendRequest::class, $zendRequest);
+        $this->assertInstanceOf('Zend\Http\PhpEnvironment\Request', $zendRequest);
+        $this->assertInstanceOf('Zend\Http\Request', $zendRequest);
 
         // But, more specifically, an instance where we do not use superglobals
         // to inject it
-        $this->assertInstanceOf(BridgeRequest::class, $zendRequest);
+        $this->assertInstanceOf('RstGroup\Psr7Bridge\Zend\Request', $zendRequest);
 
         // Assert shallow conditions
         // (content, files, and body parameters are not injected)
@@ -101,7 +98,7 @@ class Psr7ServerRequestTest extends TestCase
 
         $this->assertTrue($zf2Headers->has('Cookie'));
         $cookie = $zf2Headers->get('Cookie');
-        $this->assertInstanceOf(Cookie::class, $cookie);
+        $this->assertInstanceOf('Zend\Http\Header\Cookie', $cookie);
         $this->assertTrue(isset($cookie['PHPSESSID']));
         $this->assertEquals($cookies['PHPSESSID'], $cookie['PHPSESSID']);
 
@@ -113,12 +110,12 @@ class Psr7ServerRequestTest extends TestCase
 
     public function testCanCastFullRequestToZend()
     {
-        $server = [
+        $server = array(
             'SCRIPT_NAME'     => __FILE__,
             'SCRIPT_FILENAME' => __FILE__,
-        ];
+        );
 
-        $uploadedFiles = [
+        $uploadedFiles = array(
             'foo' => new UploadedFile(
                 __FILE__,
                 100,
@@ -126,7 +123,7 @@ class Psr7ServerRequestTest extends TestCase
                 'foo.txt',
                 'text/plain'
             ),
-        ];
+        );
 
         $uri = 'https://example.com/foo/bar?baz=bat';
         $requestUri = preg_replace('#^[^/:]+://[^/]+#', '', $uri);
@@ -135,40 +132,40 @@ class Psr7ServerRequestTest extends TestCase
 
         $body = fopen(__FILE__, 'r');
 
-        $headers = [
-            'Host'         => [ 'example.com' ],
-            'X-Foo'        => [ 'bar' ],
-            'Content-Type' => [ 'multipart/form-data' ],
-        ];
+        $headers = array(
+            'Host'         => array( 'example.com' ),
+            'X-Foo'        => array( 'bar' ),
+            'Content-Type' => array( 'multipart/form-data' ),
+        );
 
-        $cookies = [
+        $cookies = array(
             'PHPSESSID' => uniqid(),
-        ];
+        );
 
-        $bodyParams = [
+        $bodyParams = array(
             'foo' => 'bar',
-        ];
+        );
 
-        $psr7Request = (new ServerRequest(
+        $psr7Request = new ServerRequest(
             $server,
             $uploadedFiles,
             $uri,
             $method,
             $body,
             $headers
-        ))
-            ->withCookieParams($cookies)
+        );
+        $psr7Request = $psr7Request->withCookieParams($cookies)
             ->withParsedBody($bodyParams);
 
         $zendRequest = Psr7ServerRequest::toZend($psr7Request);
 
         // This needs to be a ZF2 request
-        $this->assertInstanceOf(Request::class, $zendRequest);
-        $this->assertInstanceOf(ZendRequest::class, $zendRequest);
+        $this->assertInstanceOf('Zend\Http\PhpEnvironment\Request', $zendRequest);
+        $this->assertInstanceOf('Zend\Http\Request', $zendRequest);
 
         // But, more specifically, an instance where we do not use superglobals
         // to inject it
-        $this->assertInstanceOf(BridgeRequest::class, $zendRequest);
+        $this->assertInstanceOf('RstGroup\Psr7Bridge\Zend\Request', $zendRequest);
 
         $this->assertEquals($requestUri, $zendRequest->getRequestUri());
         $this->assertEquals($uri, $zendRequest->getUri()->toString());
@@ -184,7 +181,7 @@ class Psr7ServerRequestTest extends TestCase
 
         $this->assertTrue($zf2Headers->has('Cookie'));
         $cookie = $zf2Headers->get('Cookie');
-        $this->assertInstanceOf(Cookie::class, $cookie);
+        $this->assertInstanceOf('Zend\Http\Header\Cookie', $cookie);
         $this->assertTrue(isset($cookie['PHPSESSID']));
         $this->assertEquals($cookies['PHPSESSID'], $cookie['PHPSESSID']);
 
@@ -211,12 +208,12 @@ class Psr7ServerRequestTest extends TestCase
 
     public function testCanCastErroneousUploadToZendRequest()
     {
-        $server = [
+        $server = array(
             'SCRIPT_NAME'     => __FILE__,
             'SCRIPT_FILENAME' => __FILE__,
-        ];
+        );
 
-        $uploadedFiles = [
+        $uploadedFiles = array(
             'foo' => new UploadedFile(
                 __FILE__,
                 0,
@@ -224,7 +221,7 @@ class Psr7ServerRequestTest extends TestCase
                 '',
                 ''
             ),
-        ];
+        );
 
         $uri = 'https://example.com/foo/bar?baz=bat';
         $requestUri = preg_replace('#^[^/:]+://[^/]+#', '', $uri);
@@ -233,40 +230,40 @@ class Psr7ServerRequestTest extends TestCase
 
         $body = fopen(__FILE__, 'r');
 
-        $headers = [
-            'Host'         => [ 'example.com' ],
-            'X-Foo'        => [ 'bar' ],
-            'Content-Type' => [ 'multipart/form-data' ],
-        ];
+        $headers = array(
+            'Host'         => array( 'example.com' ),
+            'X-Foo'        => array( 'bar' ),
+            'Content-Type' => array( 'multipart/form-data' ),
+        );
 
-        $cookies = [
+        $cookies = array(
             'PHPSESSID' => uniqid(),
-        ];
+        );
 
-        $bodyParams = [
+        $bodyParams = array(
             'foo' => 'bar',
-        ];
+        );
 
-        $psr7Request = (new ServerRequest(
+        $psr7Request = new ServerRequest(
             $server,
             $uploadedFiles,
             $uri,
             $method,
             $body,
             $headers
-        ))
-            ->withCookieParams($cookies)
+        );
+        $psr7Request = $psr7Request->withCookieParams($cookies)
             ->withParsedBody($bodyParams);
 
         $zendRequest = Psr7ServerRequest::toZend($psr7Request);
 
         // This needs to be a ZF2 request
-        $this->assertInstanceOf(Request::class, $zendRequest);
-        $this->assertInstanceOf(ZendRequest::class, $zendRequest);
+        $this->assertInstanceOf('Zend\Http\PhpEnvironment\Request', $zendRequest);
+        $this->assertInstanceOf('Zend\Http\Request', $zendRequest);
 
         // But, more specifically, an instance where we do not use superglobals
         // to inject it
-        $this->assertInstanceOf(BridgeRequest::class, $zendRequest);
+        $this->assertInstanceOf('RstGroup\Psr7Bridge\Zend\Request', $zendRequest);
 
         $this->assertEquals($requestUri, $zendRequest->getRequestUri());
         $this->assertEquals($uri, $zendRequest->getUri()->toString());
@@ -282,7 +279,7 @@ class Psr7ServerRequestTest extends TestCase
 
         $this->assertTrue($zf2Headers->has('Cookie'));
         $cookie = $zf2Headers->get('Cookie');
-        $this->assertInstanceOf(Cookie::class, $cookie);
+        $this->assertInstanceOf('Zend\Http\Header\Cookie', $cookie);
         $this->assertTrue(isset($cookie['PHPSESSID']));
         $this->assertEquals($cookies['PHPSESSID'], $cookie['PHPSESSID']);
 
@@ -313,8 +310,8 @@ class Psr7ServerRequestTest extends TestCase
 
     public function testNestedFileParametersArePassedCorrectlyToZendRequest()
     {
-        $uploadedFiles = [
-            'foo-bar' => [
+        $uploadedFiles = array(
+            'foo-bar' => array(
                 new UploadedFile(
                     __FILE__,
                     0,
@@ -329,20 +326,20 @@ class Psr7ServerRequestTest extends TestCase
                     basename(__FILE__),
                     'plain/text'
                 ),
-            ]
-        ];
+            )
+        );
 
-        $psr7Request = new ServerRequest([], $uploadedFiles);
+        $psr7Request = new ServerRequest(array(), $uploadedFiles, null, 'POST');
 
         $zendRequest = Psr7ServerRequest::toZend($psr7Request);
 
         // This needs to be a ZF request
-        $this->assertInstanceOf(Request::class, $zendRequest);
-        $this->assertInstanceOf(ZendRequest::class, $zendRequest);
+        $this->assertInstanceOf('Zend\Http\PhpEnvironment\Request', $zendRequest);
+        $this->assertInstanceOf('Zend\Http\Request', $zendRequest);
 
         // But, more specifically, an instance where we do not use superglobals
         // to inject it
-        $this->assertInstanceOf(BridgeRequest::class, $zendRequest);
+        $this->assertInstanceOf('RstGroup\Psr7Bridge\Zend\Request', $zendRequest);
 
         $test = $zendRequest->getFiles();
         $this->assertCount(1, $test);
@@ -375,82 +372,74 @@ class Psr7ServerRequestTest extends TestCase
         $this->assertEquals(UPLOAD_ERR_OK, $upload[1]['error']);
     }
 
-    public function testCustomHttpMethodsDoNotRaiseAnExceptionDuringConversionToZendRequest()
-    {
-        $psr7Request = new ServerRequest([], [], null, 'CUSTOM_METHOD');
-
-        $zendRequest = Psr7ServerRequest::toZend($psr7Request);
-        $this->assertSame('CUSTOM_METHOD', $zendRequest->getMethod());
-    }
-
     public function getResponseData()
     {
-        return [
-            [
+        return array(
+            array(
                 'http://framework.zend.com/', // uri
                 'GET', // http method
-                [ 'Content-Type' => 'text/html' ], // headers
+                array( 'Content-Type' => 'text/html' ), // headers
                 '<html></html>', // body
-                [ 'foo' => 'bar' ], // query params
-                [], // post
-                [], // files
-            ],
-            [
+                array( 'foo' => 'bar' ), // query params
+                array(), // post
+                array(), // files
+            ),
+            array(
                 'http://framework.zend.com/', // uri
                 'POST', // http method
-                [
+                array(
                     'Content-Type' => 'application/x-www-form-urlencoded',
                     'Cookie' => sprintf("PHPSESSID=%s;foo=bar", uniqid())
-                ], // headers
+                ), // headers
                 '', // body
-                [ 'foo' => 'bar' ], // query params
-                [ 'baz' => 'bar' ], // post
-                [], // files
-            ],
-            [
+                array( 'foo' => 'bar' ), // query params
+                array( 'baz' => 'bar' ), // post
+                array(), // files
+            ),
+            array(
                 'http://framework.zend.com/', // uri
                 'POST', // http method
-                [ 'Content-Type' => 'multipart/form-data' ], // headers
+                array( 'Content-Type' => 'multipart/form-data' ), // headers
                 file_get_contents(__FILE__), // body
-                [ 'foo' => 'bar' ], // query params
-                [], // post
-                [
-                    'file' => [
-                        'test1' => [
+                array( 'foo' => 'bar' ), // query params
+                array(), // post
+                array(
+                    'file' => array(
+                        'test1' => array(
                             'name' => 'test1.txt',
                             'type' => 'text/plain',
                             'tmp_name' => __FILE__,
                             'error' => 0,
                             'size' => 1,
-                        ],
-                        'test2' => [
+                        ),
+                        'test2' => array(
                             'name' => 'test2.txt',
                             'type' => 'text/plain',
                             'tmp_name' => __FILE__,
                             'error' => 0,
                             'size' => 1,
-                        ]
-                    ]
-                ], // files
-            ],
-            [
+                        )
+                    )
+                ), // files
+            ),
+            array(
                 'http://framework.zend.com/', // uri
                 'POST', // http method
-                [ 'Content-Type' => 'multipart/form-data' ], // headers
+                array( 'Content-Type' => 'multipart/form-data' ), // headers
                 file_get_contents(__FILE__), // body
-                [ 'foo' => 'bar' ], // query params
-                [], // post
-                [
-                    'file' => [
+                array( 'foo' => 'bar' ), // query params
+                array(), // post
+                array(
+                    'file' => array(
                         'name' => 'test2.txt',
                         'type' => 'text/plain',
                         'tmp_name' => __FILE__,
                         'error' => 0,
                         'size' => 1,
-                    ]
-                ], // files
-            ]
-        ];
+                    )
+                ), // files
+            )
+        );
     }
 
     /**
@@ -468,7 +457,7 @@ class Psr7ServerRequestTest extends TestCase
         $zendRequest->getFiles()->fromArray($files);
 
         $psr7Request = Psr7ServerRequest::fromZend($zendRequest);
-        $this->assertInstanceOf(ServerRequest::class, $psr7Request);
+        $this->assertInstanceOf('Asika\Http\ServerRequest', $psr7Request);
         // URI
         $this->assertEquals($uri, (string) $psr7Request->getUri());
         // HTTP method
@@ -512,7 +501,7 @@ class Psr7ServerRequestTest extends TestCase
     public function testFromZendConvertsCookies()
     {
         $request = new ZendRequest();
-        $zendCookieData = ['foo' => 'test', 'bar' => 'test 2'];
+        $zendCookieData = array('foo' => 'test', 'bar' => 'test 2');
         $request->getHeaders()->addHeader(new Cookie($zendCookieData));
 
         $psr7Request = Psr7ServerRequest::fromZend($request);
@@ -527,7 +516,7 @@ class Psr7ServerRequestTest extends TestCase
     public function testServerParams()
     {
         $zendRequest = new Request();
-        $zendRequest->setServer(new Parameters(['REMOTE_ADDR' => '127.0.0.1']));
+        $zendRequest->setServer(new Parameters(array('REMOTE_ADDR' => '127.0.0.1')));
 
         $psr7Request = Psr7ServerRequest::fromZend($zendRequest);
 
@@ -541,7 +530,7 @@ class Psr7ServerRequestTest extends TestCase
      */
     public function testBaseUrlFromGlobal()
     {
-        $_SERVER = [
+        $server = array(
             'HTTP_HOST' => 'host.com',
             'SERVER_PORT' => '80',
             'REQUEST_URI' => '/test/path/here?foo=bar',
@@ -549,9 +538,9 @@ class Psr7ServerRequestTest extends TestCase
             'PHP_SELF' => '/test/path/here/index.php',
             'SCRIPT_NAME' => '/test/path/here/index.php',
             'QUERY_STRING' => 'foo=bar'
-        ];
+        );
 
-        $psr7 = ServerRequestFactory::fromGlobals();
+        $psr7 = new ServerRequest($server, array(), null, 'GET');
         $converted = Psr7ServerRequest::toZend($psr7);
         $zendRequest = new Request();
 
@@ -563,8 +552,8 @@ class Psr7ServerRequestTest extends TestCase
      */
     public function testPrivateConstruct()
     {
-        $this->expectException(Error::class);
-        $this->expectExceptionMessage(sprintf('Call to private %s::__construct', Psr7ServerRequest::class));
+        $this->setExpectedException('Error', sprintf('Call to private %s::__construct', 'RstGroup\Psr7Bridge\Psr7ServerRequest'));
+
         new Psr7ServerRequest();
     }
 }

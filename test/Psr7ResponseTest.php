@@ -5,32 +5,30 @@
  * @license   https://github.com/zendframework/zend-psr7bridge/blob/master/LICENSE.md New BSD License
  */
 
-namespace ZendTest\Psr7Bridge;
+namespace RstGroupTest\Psr7Bridge;
 
-use Error;
+use Asika\Http\Response;
+use Asika\Http\Stream\Stream;
 use PHPUnit\Framework\TestCase as TestCase;
-use Psr\Http\Message\ResponseInterface;
-use Zend\Diactoros\Response;
-use Zend\Diactoros\Stream;
+use RstGroup\Psr7Bridge\Psr7Response;
 use Zend\Http\Response as ZendResponse;
-use Zend\Psr7Bridge\Psr7Response;
 
 class Psr7ResponseTest extends TestCase
 {
     public function getResponseData()
     {
-        return [
-            [ 'Test!', 200, [ 'Content-Type' => [ 'text/html' ] ] ],
-            [ '', 204, [] ],
-            [ 'Test!', 200, [
-                'Content-Type'   => [ 'text/html; charset=utf-8' ],
-                'Content-Length' => [ '5' ]
-            ]],
-            [ 'Test!', 202, [
-                'Content-Type'   => [ 'text/html; level=1', 'text/html' ],
-                'Content-Length' => [ '5' ]
-            ]],
-        ];
+        return array(
+            array( 'Test!', 200, array( 'Content-Type' => array( 'text/html' ) ) ),
+            array( '', 204, array() ),
+            array( 'Test!', 200, array(
+                'Content-Type'   => array( 'text/html; charset=utf-8' ),
+                'Content-Length' => array( '5' )
+            )),
+            array( 'Test!', 202, array(
+                'Content-Type'   => array( 'text/html; level=1', 'text/html' ),
+                'Content-Length' => array( '5' )
+            )),
+        );
     }
 
     /**
@@ -42,10 +40,10 @@ class Psr7ResponseTest extends TestCase
         $stream->write($body);
 
         $psr7Response = new Response($stream, $status, $headers);
-        $this->assertInstanceOf(ResponseInterface::class, $psr7Response);
+        $this->assertInstanceOf('Psr\Http\Message\ResponseInterface', $psr7Response);
 
         $zendResponse = Psr7Response::toZend($psr7Response);
-        $this->assertInstanceOf(ZendResponse::class, $zendResponse);
+        $this->assertInstanceOf('Zend\Http\Response', $zendResponse);
         $this->assertEquals($body, (string)$zendResponse->getBody());
         $this->assertEquals($status, $zendResponse->getStatusCode());
 
@@ -66,10 +64,10 @@ class Psr7ResponseTest extends TestCase
         $stream->write($body);
 
         $psr7Response = new Response($stream, $status, $headers);
-        $this->assertInstanceOf(ResponseInterface::class, $psr7Response);
+        $this->assertInstanceOf('Psr\Http\Message\ResponseInterface', $psr7Response);
 
         $zendResponse = Psr7Response::toZend($psr7Response);
-        $this->assertInstanceOf(ZendResponse::class, $zendResponse);
+        $this->assertInstanceOf('Zend\Http\Response', $zendResponse);
         $this->assertEquals($body, (string)$zendResponse->getBody());
         $this->assertEquals($status, $zendResponse->getStatusCode());
 
@@ -90,10 +88,10 @@ class Psr7ResponseTest extends TestCase
         $stream->write($body);
 
         $psr7Response = new Response($stream, $status, $headers);
-        $this->assertInstanceOf(ResponseInterface::class, $psr7Response);
+        $this->assertInstanceOf('Psr\Http\Message\ResponseInterface', $psr7Response);
 
         $zendResponse = Psr7Response::toZend($psr7Response);
-        $this->assertInstanceOf(ZendResponse::class, $zendResponse);
+        $this->assertInstanceOf('Zend\Http\Response', $zendResponse);
         $this->assertEquals($body, (string)$zendResponse->getBody());
         $this->assertEquals($status, $zendResponse->getStatusCode());
 
@@ -107,12 +105,12 @@ class Psr7ResponseTest extends TestCase
 
     public function getResponseString()
     {
-        return [
-            [ "HTTP/1.1 200 OK\r\nContent-Type: text/html; charset=utf-8\r\n\r\nTest!" ],
-            [ "HTTP/1.1 204 OK\r\n\r\n" ],
-            [ "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\nContent-Length: 5\r\n\r\nTest!" ],
-            [ "HTTP/1.1 200 OK\r\nContent-Type: text/html, text/xml\r\nContent-Length: 5\r\n\r\nTest!" ],
-        ];
+        return array(
+            array( "HTTP/1.1 200 OK\r\nContent-Type: text/html; charset=utf-8\r\n\r\nTest!" ),
+            array( "HTTP/1.1 204 OK\r\n\r\n" ),
+            array( "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\nContent-Length: 5\r\n\r\nTest!" ),
+            array( "HTTP/1.1 200 OK\r\nContent-Type: text/html, text/xml\r\nContent-Length: 5\r\n\r\nTest!" ),
+        );
     }
 
     /**
@@ -121,9 +119,9 @@ class Psr7ResponseTest extends TestCase
     public function testResponseFromZend($response)
     {
         $zendResponse = ZendResponse::fromString($response);
-        $this->assertInstanceOf(ZendResponse::class, $zendResponse);
+        $this->assertInstanceOf('Zend\Http\Response', $zendResponse);
         $psr7Response = Psr7Response::fromZend($zendResponse);
-        $this->assertInstanceOf(ResponseInterface::class, $psr7Response);
+        $this->assertInstanceOf('Psr\Http\Message\ResponseInterface', $psr7Response);
         $this->assertEquals((string)$psr7Response->getBody(), $zendResponse->getBody());
         $this->assertEquals($psr7Response->getStatusCode(), $zendResponse->getStatusCode());
 
@@ -140,8 +138,8 @@ class Psr7ResponseTest extends TestCase
      */
     public function testPrivateConstruct()
     {
-        $this->expectException(Error::class);
-        $this->expectExceptionMessage(sprintf('Call to private %s::__construct', Psr7Response::class));
+        $this->setExpectedException('Error', sprintf('Call to private %s::__construct', 'RstGroup\Psr7Bridge\Psr7Response'));
+
         new Psr7Response();
     }
 }
